@@ -1,0 +1,55 @@
+{
+  "name": "fe-version-checker",
+  "version": "0.2.2",
+  "description": "前端部署检测工具，用于检测生产环境是否有新部署",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "import": "./dist/index.esm.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "generate-version": "./dist/cli.js"
+  },
+  "homepage": "https://github.com/007sair/fe-version-checker",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "clean": "rimraf dist",
+    "prebuild": "pnpm run clean",
+    "prepare": "pnpm run build"
+  },
+  "keywords": [
+    "frontend",
+    "version",
+    "checker",
+    "deployment",
+    "detector"
+  ],
+  "author": "LongChan",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "24.1.0",
+    "@rollup/plugin-node-resolve": "15.0.2",
+    "@rollup/plugin-typescript": "9.0.2",
+    "@types/node": "18.15.11",
+    "rimraf": "4.4.1",
+    "rollup": "3.20.2",
+    "tslib": "2.5.0",
+    "typescript": "4.9.5"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=14",
+    "pnpm": ">=7"
+  }
+}
