@@ -1,6 +1,6 @@
 {
   "name": "fe-version-checker",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "前端部署检测工具，用于检测生产环境是否有新部署",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",

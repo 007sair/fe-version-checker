@@ -9,7 +9,8 @@ export class VersionChecker {
     this.options = {
       interval: 60000,
       versionUrl: "/version.json",
-      message: "检测到新版本已部署，请刷新页面获取最新内容。",
+      message:
+        "New version detected. Please refresh the page to get the latest updates.",
       onNewVersion: () => {
         if (window.confirm(this.options.message)) {
           window.location.reload();
@@ -41,7 +42,7 @@ export class VersionChecker {
       const decodedInfo = JSON.parse(atob(json.data));
       return decodedInfo;
     } catch (error) {
-      this.error("获取版本信息失败:", error);
+      this.error("Failed to fetch version info:", error);
       throw error;
     }
   }
@@ -52,9 +53,9 @@ export class VersionChecker {
     }
 
     try {
-      // 获取初始版本信息
+      // Get initial version info
       this.currentVersion = await this.getCurrentVersion();
-      this.log("版本检测已启动");
+      this.log("Version checking started");
 
       this.timer = setInterval(async () => {
         try {
@@ -65,16 +66,16 @@ export class VersionChecker {
             newVersion.version !== this.currentVersion.version ||
             newVersion.timestamp > this.currentVersion.timestamp
           ) {
-            this.log("检测到新版本");
+            this.log("New version detected");
             this.options.onNewVersion();
             this.stop();
           }
         } catch (error) {
-          this.error("版本检查失败:", error);
+          this.error("Version check failed:", error);
         }
       }, this.options.interval);
     } catch (error) {
-      this.error("启动版本检测失败:", error);
+      this.error("Failed to start version checking:", error);
     }
   }
 
@@ -82,11 +83,11 @@ export class VersionChecker {
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
-      this.log("版本检测已停止");
+      this.log("Version checking stopped");
     }
   }
 }
 
-// 同时支持默认导出和具名导出
+// Support both default and named exports
 export { VersionCheckerOptions, VersionInfo } from "./types";
 export default VersionChecker;

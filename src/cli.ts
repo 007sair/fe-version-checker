@@ -17,7 +17,7 @@ function parseArgs() {
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--output" || args[i] === "-o") {
       outputDir = args[i + 1];
-      i++; // 跳过下一个参数
+      i++; // Skip next argument
       continue;
     }
     if (args[i] === "--filename" || args[i] === "-f") {
@@ -25,7 +25,7 @@ function parseArgs() {
       if (!filename.endsWith(".json")) {
         filename += ".json";
       }
-      i++; // 跳过下一个参数
+      i++; // Skip next argument
       continue;
     }
   }
@@ -40,12 +40,12 @@ function generateVersionFile() {
   try {
     const { outputDir, filename } = parseArgs();
 
-    // 确保输出目录存在
+    // Ensure output directory exists
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    // 读取当前目录下的 package.json
+    // Read package.json from current directory
     const packagePath = path.join(process.cwd(), "package.json");
     const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf-8"));
 
@@ -54,47 +54,50 @@ function generateVersionFile() {
       timestamp: Date.now(),
     };
 
-    // 生成加密的版本信息
+    // Generate encrypted version info
     const encodedInfo = encodeVersionInfo(versionInfo);
 
-    // 生成 version.json 文件内容
+    // Generate version.json file content
     const fileContent = JSON.stringify({ data: encodedInfo }, null, 2);
 
-    // 写入文件
+    // Write to file
     const outputPath = path.join(outputDir, filename);
     fs.writeFileSync(outputPath, fileContent);
 
-    console.log("✅ 版本信息文件生成成功！");
-    console.log("📂 输出目录:", outputDir);
-    console.log("📄 文件路径:", outputPath);
-    console.log("📦 版本号:", versionInfo.version);
-    console.log("⏰ 时间戳:", new Date(versionInfo.timestamp).toLocaleString());
+    console.log("✅ Version file generated successfully!");
+    console.log("📂 Output directory:", outputDir);
+    console.log("📄 File path:", outputPath);
+    console.log("📦 Version:", versionInfo.version);
+    console.log(
+      "⏰ Timestamp:",
+      new Date(versionInfo.timestamp).toLocaleString()
+    );
   } catch (error) {
-    console.error("❌ 生成版本信息文件失败:", error);
+    console.error("❌ Failed to generate version file:", error);
     process.exit(1);
   }
 }
 
-// 显示帮助信息
+// Show help information
 function showHelp() {
-  console.log(`
-使用方法: generate-version [选项]
+  console.log(`  
+Usage: generate-version [options]  
 
-选项:
-  -o, --output <dir>     指定输出目录（默认为当前目录）
-  -f, --filename <name>  指定文件名（默认为 version.json）
-  -h, --help             显示帮助信息
+Options:  
+  -o, --output <dir>     Specify output directory (default: current directory)  
+  -f, --filename <name>  Specify filename (default: version.json)  
+  -h, --help            Show help information  
 
-示例:
-  generate-version                     # 在当前目录生成 version.json
-  generate-version -o ./public         # 在 ./public 目录生成 version.json
-  generate-version --output ./dist     # 在 ./dist 目录生成 version.json
-  generate-version -f custom.json      # 生成 custom.json
-  generate-version -o ./public -f v1   # 在 ./public 目录生成 v1.json
+Examples:  
+  generate-version                     # Generate version.json in current directory  
+  generate-version -o ./public         # Generate version.json in ./public  
+  generate-version --output ./dist     # Generate version.json in ./dist  
+  generate-version -f custom.json      # Generate custom.json  
+  generate-version -o ./public -f v1   # Generate v1.json in ./public  
 `);
 }
 
-// 处理命令行参数
+// Handle command line arguments
 if (process.argv.includes("--help") || process.argv.includes("-h")) {
   showHelp();
 } else {
