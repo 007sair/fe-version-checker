@@ -23,9 +23,9 @@ pnpm add fe-version-checker
 在你的项目构建过程中，使用内置的命令行工具生成版本文件：
 
 ```bash
-generate-version -o ./public
+npx generate-version -o ./public
 # or 构建结束后
-generate-version -o ./dist
+npx generate-version -o ./dist
 ```
 
 这会在指定目录生成一个 `version.json` 文件，包含了当前版本信息。
@@ -34,7 +34,7 @@ generate-version -o ./dist
 
 ```typescript
 // 方式一：默认导入
-import DefaultVersionChecker from "fe-version-checker";
+import VersionChecker from "fe-version-checker";
 
 // 方式二：具名导入（推荐）
 import { VersionChecker } from "fe-version-checker";
@@ -107,7 +107,7 @@ const App = () => {
     };
 
     const checker = new VersionChecker({
-      interval: 3000,
+      interval: 30000,
       silent: true,
       onNewVersion: () => {
         // 使用 antd 的 message 组件显示提示
@@ -198,21 +198,57 @@ generate-version -o ./public -f v1   # 在 ./public 目录生成 v1.json
 4. 可以自定义新版本提示的 UI 和交互
 5. 在生产环境中建议开启 silent 模式
 
-## 本地开发
+## 其他实践
 
-```bash
-# 安装依赖
-pnpm install
+### 1. 微前端场景
 
-# 开发模式
-pnpm run dev
+当版本检测的应用作为子应用被嵌入时，使用绝对路径会导致请求资源路径错误。以 micro-app 为例，需要做如下配置的修改：
 
-# 构建
-pnpm run build
+```typescript
+const prefix = window.__MICRO_APP_ENVIRONMENT__
+  ? window.__MICRO_APP_PUBLIC_PATH__
+  : "";
 
-# 清理构建文件
-pnpm run clean
+const checker = new VersionChecker({
+  interval: 3000,
+  silent: true,
+  versionUrl: `${prefix}/version.json`,
+  onNewVersion: () => {
+    console.log("检测到新版本");
+  },
+});
 ```
+
+> `__MICRO_APP_PUBLIC_PATH__` 配置请参考 [micro-app 官方文档](https://jd-opensource.github.io/micro-app/docs.html#/zh-cn/env?id=__micro_app_public_path__)
+
+### 2. 用户触发某些特定动作时主动执行版本检查
+
+#### 2.1 页面可见性状态变化时启动/关闭版本检测
+
+```javascript
+// 新页面、切换/关闭标签页、最小化/关闭浏览器都会触发该事件
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    checker.stop();
+  } else {
+    checker.start();
+  }
+});
+```
+
+#### 2.2 导航守卫中触发
+
+```javascript
+const router = createRouter({ ... })
+
+router.beforeEach((to, from) => {
+  checker.start()
+})
+```
+
+#### 2.3 script 脚本报错时触发
+
+这里不做赘述，具体情况因人而异。
 
 ## 许可证
 

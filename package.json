@@ -1,6 +1,6 @@
 {
   "name": "fe-version-checker",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "前端部署检测工具，用于检测生产环境是否有新部署",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
@@ -15,7 +15,16 @@
   "bin": {
     "generate-version": "./dist/cli.js"
   },
+  "author": "LongChan",
   "homepage": "https://github.com/007sair/fe-version-checker",
+  "license": "MIT",
+  "keywords": [
+    "frontend",
+    "version",
+    "checker",
+    "deployment",
+    "detector"
+  ],
   "files": [
     "dist"
   ],
@@ -26,15 +35,6 @@
     "prebuild": "pnpm run clean",
     "prepare": "pnpm run build"
   },
-  "keywords": [
-    "frontend",
-    "version",
-    "checker",
-    "deployment",
-    "detector"
-  ],
-  "author": "LongChan",
-  "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-commonjs": "24.1.0",
     "@rollup/plugin-node-resolve": "15.0.2",

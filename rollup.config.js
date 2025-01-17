@@ -25,13 +25,12 @@ const config = [
       },
     ],
     plugins: [
-      resolve(),
+      resolve({ browser: true }),
       commonjs(),
       typescript({
         tsconfig: "./tsconfig.json",
         declaration: true,
         declarationDir: "dist",
-        exclude: ["src/cli.ts"],
       }),
     ],
   },
